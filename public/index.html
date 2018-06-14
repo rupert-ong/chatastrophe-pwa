@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chatastrophe</title>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+  <script src="secrets.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: window.apiKey,
+      authDomain: "chatastrophe-f21d8.firebaseapp.com",
+      databaseURL: "https://chatastrophe-f21d8.firebaseio.com",
+      projectId: "chatastrophe-f21d8",
+      storageBucket: "",
+      messagingSenderId: window.messagingSenderId
+    };
+    window.firebase = firebase;
+    firebase.initializeApp(config);
+  </script>
+</body>
+
+</html>
