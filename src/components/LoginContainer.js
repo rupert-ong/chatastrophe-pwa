@@ -4,7 +4,7 @@ import Header from './Header';
 
 class LoginContainer extends Component {
 
-  state = { email: '', password: '' };
+  state = { email: '', password: '', error: '' };
 
   handleEmailChange = e => {
     this.setState({
@@ -19,11 +19,17 @@ class LoginContainer extends Component {
   }
 
   handleSubmit =  e => {
+    const { email, password } = this.state;
     e.preventDefault();
-    console.log(this.state);
+    if(email && password) {
+      // try login or signup
+    } else {
+      this.setState({ error: 'Please fill in both fields' });
+    }
   }
 
   render() {
+    const { email, password, error } = this.state;
     return (
       <div id="LoginContainer" className="inner-container">
         <Header />
@@ -32,13 +38,16 @@ class LoginContainer extends Component {
           <input
             type="text"
             onChange={this.handleEmailChange} 
-            value={this.state.email} 
+            value={email} 
             placeholder="Your email" />
           <input
             type="password"
             onChange={this.handlePasswordChange} 
-            value={this.state.password} 
+            value={password} 
             placeholder="Your password" />
+          { error && (
+           <p className="error">{error}</p> 
+          ) }
           <button className="red light" type="submit">Login</button>
         </form>
       </div>
