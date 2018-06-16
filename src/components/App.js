@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import './App.css';
+import { Route } from 'react-router-dom';
 
 import LoginContainer from './LoginContainer'
+import ChatContainer from './ChatContainer';
+
+import './App.css';
 
 export default class App extends Component {
   state = { user: null }
@@ -17,7 +20,8 @@ export default class App extends Component {
   render() {
     return (
       <div id="container" className="inner-container">
-        <LoginContainer />
+        <Route path="/login"  component={LoginContainer} />
+        <Route exact path="/" component={ChatContainer} />
       </div>
     );
   }
