@@ -8,7 +8,7 @@ class LoginContainer extends Component {
 
   login = (email, password) => {
     firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(res => console.log(res))
+      .then(res => this.onLogin())
       .catch(err => {
         if (err.code === 'auth/user-not-found') {
           this.signUp(email, password);
@@ -16,6 +16,11 @@ class LoginContainer extends Component {
           this.setState({ error: err.message });
         }
       });
+  }
+
+  onLogin = () => {
+    // HTML5 History API to force 'ChatContainer' route
+    this.props.history.push('/');
   }
 
   signUp = (email, password) => {
