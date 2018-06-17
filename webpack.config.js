@@ -35,7 +35,8 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HTMLWebpackPlugin({
       inject: true,
-      template: __dirname + '/public/index.html'
+      template: __dirname + '/public/index.html',
+      publicPath: '/'
     })
   ],
 
