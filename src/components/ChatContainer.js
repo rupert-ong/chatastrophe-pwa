@@ -40,7 +40,7 @@ export default class ChatContainer extends Component {
         </Header>
         <div id="message-container">
           {messages.map(msg => (
-            <div key={msg.id} className="message">
+            <div key={msg.id} className={`message ${this.props.user.email === msg.author && 'mine'}`}>
               <p>{msg.msg}</p>
               <p className="author"><Link to={`/users/${msg.user_id}`}>{msg.author}</Link></p>
             </div>

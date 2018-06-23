@@ -70,12 +70,14 @@ class App extends Component {
   }
 
   render() {
+    const { messages, user } = this.state;
     return (
       <div id="container" className="inner-container">
         <Route
           exact path="/"
           render={() => <ChatContainer 
-            messages={this.state.messages} 
+            messages={messages} 
+            user={user} 
             onSubmit={this.handleSubmitMessage} 
           />}
         />
