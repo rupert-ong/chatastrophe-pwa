@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import Header from './Header';
 
@@ -31,12 +32,19 @@ export default class ChatContainer extends Component {
 
   render() {
     const { newMessage } = this.state;
+    const { messages } = this.props;
     return (
       <div id="ChatContainer" className="inner-container">
         <Header>
           <button className="red" onClick={this.handleLogout}>Logout</button>
         </Header>
         <div id="message-container">
+          {messages.map(msg => (
+            <div key={msg.id} className="message">
+              <p>{msg.msg}</p>
+              <p className="author"><Link to={`/users/${msg.user_id}`}>{msg.author}</Link></p>
+            </div>
+          ))}
         </div>
         <div id="chat-input">
           <textarea
