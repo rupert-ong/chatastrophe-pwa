@@ -8,7 +8,7 @@ import UserContainer from './UserContainer';
 import './App.css';
 
 class App extends Component {
-  state = { user: null }
+  state = { user: null, messages: [] }
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
@@ -17,7 +17,32 @@ class App extends Component {
       } else {
         this.props.history.push('/login');
       }
-    })
+    });
+
+    // Listen to all updates to firebase DB /messages ref
+    firebase
+      .database()
+      .ref('/messages')
+      .on('value', snapshot => {
+        this.onGetAllMessages(snapshot);
+      });
+  }
+
+  componentWillUnmount() {
+    firebase
+      .database()
+      .ref()
+      .off();
+  }
+
+  onGetAllMessages = snapshot => {
+    // Get an array of message objects, with message id added
+    const messages = Object.keys(snapshot.val()).map(key => {
+      const msg = snapshot.val()[key];
+      msg.id = key;
+      return msg;
+    });
+    this.setState({ messages });
   }
 
   handleSubmitMessage = msg => {
@@ -49,7 +74,10 @@ class App extends Component {
       <div id="container" className="inner-container">
         <Route
           exact path="/"
-          render={() => <ChatContainer onSubmit={this.handleSubmitMessage} />}
+          render={() => <ChatContainer 
+            messages={this.state.messages} 
+            onSubmit={this.handleSubmitMessage} 
+          />}
         />
         <Route path="/login" component={LoginContainer} />
         <Route path="/users/:id" component={UserContainer} />
