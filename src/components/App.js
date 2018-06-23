@@ -20,10 +20,18 @@ class App extends Component {
     })
   }
 
+  handleSubmitMessage = msg => {
+    // Send msg to DB
+    console.log(msg);
+  }
+
   render() {
     return (
       <div id="container" className="inner-container">
-        <Route exact path="/" component={ChatContainer} />
+        <Route 
+          exact path="/" 
+          render={() => <ChatContainer onSubmit={this.handleSubmitMessage} />}
+        />
         <Route path="/login" component={LoginContainer} />
         <Route path="/users/:id" component={UserContainer} />
       </div>
