@@ -21,15 +21,34 @@ class App extends Component {
   }
 
   handleSubmitMessage = msg => {
-    // Send msg to DB
-    console.log(msg);
+    const { user } = this.state;
+    const data = {
+      msg,
+      author: user.email,
+      user_id: user.uid,
+      timestamp: Date.now()
+    }
+
+    /*
+      Set rules of Firebase DB to require authentication
+      {
+        "rules": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      }
+    */
+    firebase
+      .database()
+      .ref('messages/')
+      .push(data);
   }
 
   render() {
     return (
       <div id="container" className="inner-container">
-        <Route 
-          exact path="/" 
+        <Route
+          exact path="/"
           render={() => <ChatContainer onSubmit={this.handleSubmitMessage} />}
         />
         <Route path="/login" component={LoginContainer} />
