@@ -30,6 +30,14 @@ export default class ChatContainer extends Component {
     firebase.auth().signOut();
   }
 
+  showMessageAuthor = (currentMsg, nextMsg) => {
+    if (!nextMsg || nextMsg.author !== currentMsg.author) {
+      return (
+        <p className="author"><Link to={`/users/${currentMsg.user_id}`}>{currentMsg.author}</Link></p>
+      );
+    }
+  }
+
   render() {
     const { newMessage } = this.state;
     const { messages } = this.props;
@@ -39,10 +47,10 @@ export default class ChatContainer extends Component {
           <button className="red" onClick={this.handleLogout}>Logout</button>
         </Header>
         <div id="message-container">
-          {messages.map(msg => (
+          {messages.map((msg, i) => (
             <div key={msg.id} className={`message ${this.props.user.email === msg.author && 'mine'}`}>
               <p>{msg.msg}</p>
-              <p className="author"><Link to={`/users/${msg.user_id}`}>{msg.author}</Link></p>
+              { this.showMessageAuthor(msg, messages[i+1]) }
             </div>
           ))}
         </div>
