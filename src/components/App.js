@@ -88,7 +88,14 @@ class App extends Component {
           />}
         />
         <Route path="/login" component={LoginContainer} />
-        <Route path="/users/:id" component={UserContainer} />
+        <Route
+          path="/users/:id"
+          render={({ history, match }) => <UserContainer
+            messages={messages}
+            areMessagesLoaded={areMessagesLoaded}
+            userId={match.params.id}
+          />}
+        />
       </div>
     );
   }
