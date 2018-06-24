@@ -4,8 +4,16 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 
 export default class ChatContainer extends Component {
+  myRef = React.createRef();
+
   state = {
     newMessage: ''
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.messages.length !== this.props.messages.length) {
+      this.scrollToBottom();
+    }
   }
 
   handleInputChange = e => {
@@ -30,6 +38,13 @@ export default class ChatContainer extends Component {
     firebase.auth().signOut();
   }
 
+  scrollToBottom = () => {
+    const node = this.myRef.current;
+    if (node) {
+      node.scrollTop = node.scrollHeight;
+    }
+  }
+
   showMessageAuthor = (currentMsg, nextMsg) => {
     if (!nextMsg || nextMsg.author !== currentMsg.author) {
       return (
@@ -46,11 +61,11 @@ export default class ChatContainer extends Component {
         <Header>
           <button className="red" onClick={this.handleLogout}>Logout</button>
         </Header>
-        <div id="message-container">
+        <div id="message-container" ref={this.myRef}>
           {messages.map((msg, i) => (
             <div key={msg.id} className={`message ${this.props.user.email === msg.author && 'mine'}`}>
               <p>{msg.msg}</p>
-              { this.showMessageAuthor(msg, messages[i+1]) }
+              {this.showMessageAuthor(msg, messages[i + 1])}
             </div>
           ))}
         </div>
