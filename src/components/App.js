@@ -8,7 +8,7 @@ import UserContainer from './UserContainer';
 import './App.css';
 
 class App extends Component {
-  state = { user: null, messages: [] }
+  state = { user: null, messages: [], areMessagesLoaded: false }
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
@@ -25,6 +25,11 @@ class App extends Component {
       .ref('/messages')
       .on('value', snapshot => {
         this.onGetAllMessages(snapshot);
+        if (!this.state.areMessagesLoaded) {
+          this.setState({
+            areMessagesLoaded: true
+          })
+        }
       });
   }
 
@@ -70,15 +75,16 @@ class App extends Component {
   }
 
   render() {
-    const { messages, user } = this.state;
+    const { messages, user, areMessagesLoaded } = this.state;
     return (
       <div id="container" className="inner-container">
         <Route
           exact path="/"
-          render={() => <ChatContainer 
-            messages={messages} 
-            user={user} 
-            onSubmit={this.handleSubmitMessage} 
+          render={() => <ChatContainer
+            messages={messages}
+            areMessagesLoaded={areMessagesLoaded}
+            user={user}
+            onSubmit={this.handleSubmitMessage}
           />}
         />
         <Route path="/login" component={LoginContainer} />

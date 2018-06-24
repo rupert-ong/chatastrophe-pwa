@@ -55,12 +55,17 @@ export default class ChatContainer extends Component {
 
   render() {
     const { newMessage } = this.state;
-    const { messages } = this.props;
+    const { messages, areMessagesLoaded } = this.props;
     return (
       <div id="ChatContainer" className="inner-container">
         <Header>
           <button className="red" onClick={this.handleLogout}>Logout</button>
         </Header>
+        {!areMessagesLoaded && (
+          <div id="loading-container">
+            <img src="/assets/icon.png" alt="logo" id="loader" />
+          </div>
+        )}
         <div id="message-container" ref={this.myRef}>
           {messages.map((msg, i) => (
             <div key={msg.id} className={`message ${this.props.user.email === msg.author && 'mine'}`}>
