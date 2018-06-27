@@ -1,7 +1,11 @@
 export default class NotificationResource {
-  constructor(messaging) {
+  allTokens = [];
+  tokensLoaded = false;
+
+  constructor(messaging, database) {
     this.messaging = messaging;
-    
+    this.database = database;
+
     // Firebase messaging: Request permission for notifications
     try {
       this.messaging
@@ -16,10 +20,15 @@ export default class NotificationResource {
       console.log('No notification support.', err);
     }
 
-    // Log device token
-    this.messaging.getToken()
-      .then(res => {
-        console.log(res);
+    this.setupTokenRefresh();
+
+    // Create DB for device tokens
+    this.database
+      .ref('/fcmTokens')
+      .on('value', snapshot => {
+        this.allTokens = snapshot.val();
+        this.tokensLoaded = true;
+        console.log(this.allTokens);
       });
   };
 
@@ -32,8 +41,29 @@ export default class NotificationResource {
 
   saveTokenToServer() {
     // Get token
-    // Look for existing token
-    // If it exists, replace it
-    // If not, create a new one
+    this.messaging.getToken().then(res => {
+      console.log('Device token: ', res);
+      if (this.tokensLoaded) {
+        // Look for existing token
+        const existingToken = this.findExistingToken(res);
+        // If it exists, replace it
+        if (existingToken) {
+
+          // If not, create a new one
+        } else {
+
+        }
+      }
+    });
+  }
+
+  findExistingToken(tokenToSave) {
+    for (let tokenKey in this.allTokens) {
+      const token = this.allTokens[tokenKey].token;
+      if (token === tokenToSave) {
+        return tokenKey;
+      }
+    }
+    return false;
   }
 }

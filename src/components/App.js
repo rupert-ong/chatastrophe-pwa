@@ -34,7 +34,10 @@ class App extends Component {
         }
       });
     
-    this.notifications = new NotificationResource(firebase.messaging());
+    this.notifications = new NotificationResource(
+      firebase.messaging(),
+      firebase.database()
+    );
   }
 
   componentWillUnmount() {
