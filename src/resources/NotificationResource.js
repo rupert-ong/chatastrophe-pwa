@@ -1,6 +1,7 @@
 export default class NotificationResource {
   allTokens = [];
   tokensLoaded = false;
+  user = null;
 
   constructor(messaging, database) {
     this.messaging = messaging;
@@ -22,17 +23,18 @@ export default class NotificationResource {
 
     this.setupTokenRefresh();
 
-    // Create DB for device tokens
+    // Listen to all updates to firebase store /fcmTokens
     this.database
       .ref('/fcmTokens')
       .on('value', snapshot => {
+        // Get all tokens
         this.allTokens = snapshot.val();
         this.tokensLoaded = true;
-        console.log(this.allTokens);
+        console.log(this.allTokens, this.tokensLoaded);
       });
   };
 
-  // Listener for token changes
+  // Listener for token changes (a new token is generated)
   setupTokenRefresh() {
     this.messaging.onTokenRefresh(() => {
       this.saveTokenToServer();
@@ -42,16 +44,17 @@ export default class NotificationResource {
   saveTokenToServer() {
     // Get token
     this.messaging.getToken().then(res => {
-      console.log('Device token: ', res);
+      console.log('Device token: ', res, 'Tokens loaded: ', this.tokensLoaded);
       if (this.tokensLoaded) {
         // Look for existing token
         const existingToken = this.findExistingToken(res);
         // If it exists, replace it
         if (existingToken) {
-
+          console.log('Existing token: ', res);
           // If not, create a new one
         } else {
-
+          this.registerToken(res);
+          console.log('Saving new token to store');
         }
       }
     });
@@ -65,5 +68,21 @@ export default class NotificationResource {
       }
     }
     return false;
+  }
+
+  // Save token key and user id to store
+  registerToken(token) {
+    this.database
+      .ref('fcmTokens/')
+        .push({
+          token: token,
+          user_id: this.user.uid
+        });
+  }
+
+  changeUser(user) {
+    console.log('changeUser called');
+    this.user = user;
+    this.saveTokenToServer();
   }
 }

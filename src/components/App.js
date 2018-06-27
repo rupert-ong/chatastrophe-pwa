@@ -13,9 +13,16 @@ class App extends Component {
   state = { user: null, messages: [], areMessagesLoaded: false }
 
   componentDidMount() {
+    this.notifications = new NotificationResource(
+      firebase.messaging(),
+      firebase.database()
+    );
+
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ user });
+        // Store user with device token key
+        this.notifications.changeUser(user);
       } else {
         this.props.history.push('/login');
       }
@@ -33,11 +40,6 @@ class App extends Component {
           })
         }
       });
-    
-    this.notifications = new NotificationResource(
-      firebase.messaging(),
-      firebase.database()
-    );
   }
 
   componentWillUnmount() {
