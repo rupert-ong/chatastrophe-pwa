@@ -5,6 +5,8 @@ import LoginContainer from './LoginContainer'
 import ChatContainer from './ChatContainer';
 import UserContainer from './UserContainer';
 
+import NotificationResource from '../resources/NotificationResource';
+
 import './App.css';
 
 class App extends Component {
@@ -31,6 +33,8 @@ class App extends Component {
           })
         }
       });
+    
+    this.notifications = new NotificationResource(firebase.messaging());
   }
 
   componentWillUnmount() {
