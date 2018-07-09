@@ -188,12 +188,16 @@ button.red:focus {
 .message p {
   border-radius: 5px;
   padding: 5px;
-  background-color: #eaeaea;
+  background-color: lightblue;
   display: inline-block;
 }
 
 .message.mine {
   text-align: right;
+}
+
+.message.mine p {
+  background-color: lightgreen;
 }
 
 .message a {
