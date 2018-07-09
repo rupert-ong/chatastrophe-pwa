@@ -50,8 +50,14 @@ export default class NotificationResource {
         const existingToken = this.findExistingToken(res);
         // If it exists, replace it
         if (existingToken) {
-          console.log('Existing token: ', res);
-          // If not, create a new one
+          console.log('Replace existing token: ', res);
+          this.database
+            .ref(`/fcmTokens/${existingToken}`)
+            .set({
+              token: res,
+              user_id: this.user.uid
+            });
+        // If not, create a new one
         } else {
           this.registerToken(res);
           console.log('Saving new token to store');
@@ -63,6 +69,7 @@ export default class NotificationResource {
   findExistingToken(tokenToSave) {
     for (let tokenKey in this.allTokens) {
       const token = this.allTokens[tokenKey].token;
+      console.log('find existing token check for', token);
       if (token === tokenToSave) {
         return tokenKey;
       }
