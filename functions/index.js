@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
 exports.sendNotifications = functions.database
   .ref('/messages/{messageId}')
@@ -18,7 +18,7 @@ exports.sendNotifications = functions.database
         notification: {
           title: `${message.author}`,
           body: `${message.msg}`,
-          icon: 'assets/icon.png',
+          icon: '/assets/icon.png',
           click_action: `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`
         }
       };
