@@ -40,7 +40,25 @@ exports.sendNotifications = functions.database
             }
             // Send notification to devices
             if (tokens.length > 0) {
-              return admin.messaging().sendToDevice(tokens, payload);
+              return admin
+                .messaging()
+                .sendToDevice(tokens, payload)
+                .then(response => {
+                  // Remove tokens that are invalid or unregistered from db
+                  const tokensToRemove = [];
+
+                  response.results.forEach((result, index) => {
+                    const error = result.error;
+                    if(error) {
+                      console.error(`Failed to send notification to ${tokens[index]}: ${error}`);
+
+                      if(error.code === 'messaging/invalid-registration-token' || error.code === 'messaging/registration-token-not-registered') {
+                        tokensToRemove.push(allTokens.ref.child(tokens[index])).remove();
+                      }
+                    }
+                  });
+                  return Promise.all(tokensToRemove);
+                });
             }
             throw new Error('No tokens found');
           });
